@@ -1,5 +1,8 @@
 package com.lms.dto;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +15,7 @@ public class Librarian {
     private String username;
     private String password;
     @ManyToMany
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "LIBRARIAN_ISSUED",
     joinColumns = @JoinColumn(name = "LIBRARIAN_ID"),
     inverseJoinColumns = @JoinColumn(name="ISSUED_ID"))

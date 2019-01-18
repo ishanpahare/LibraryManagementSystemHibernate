@@ -6,6 +6,7 @@ import com.lms.dto.Book;
 import com.lms.dto.Customer;
 import com.lms.dto.IssuedBook;
 import com.lms.dto.Librarian;
+import com.lms.utils.ReadJson;
 import com.lms.views.MainView;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,16 +23,20 @@ public class App {
         Session session = sessionFactory.openSession();
 
         LibrarianDao librarianDao = new LibrarianDao();
-        CustomerDao customerDao=new CustomerDao();
+        CustomerDao customerDao = new CustomerDao();
         Librarian librarian = new Librarian();
-        Customer customer = new Customer();
-        librarian.setUsername("lib1");
+        // Customer customer = new Customer();
+
+        /* Run Once to add Books to DB */
+        ReadJson.getJson(session);
+
+        librarian.setUsername("lib2");
         librarian.setPassword("password");
 
-        customer.setName("cust1");
+        // customer.setName("cust1");
 
-        librarianDao.insertLibrarian(librarian,session);
-        customerDao.insertCustomer(customer,session);
+        librarianDao.insertLibrarian(librarian, session);
+        // customerDao.insertCustomer(customer,session);
 
         mv.getMainView(mv, session);
 

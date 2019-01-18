@@ -1,6 +1,8 @@
 package com.lms.dto;
 
 import com.lms.utils.DateUtil;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,9 +17,11 @@ public class IssuedBook extends Book{
     @Temporal(TemporalType.DATE)
     private Date returnDate = DateUtil.addDays(this.issueDate,14);
     @ManyToMany(mappedBy = "issuedBooks")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Collection<Customer> customers= new ArrayList<Customer>();
 
     @ManyToMany(mappedBy = "issuedBooks")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Collection<Librarian> librarians = new ArrayList<Librarian>();
 
     public Collection<Librarian> getLibrarians() {

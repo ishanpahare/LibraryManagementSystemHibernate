@@ -1,5 +1,8 @@
 package com.lms.dto;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +15,8 @@ public class Customer {
     private int cid;
     private String name;
 
-    /*  @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-      private Collection<IssuedBook> issuedBooks = new ArrayList<IssuedBook>();*/
     @ManyToMany
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "CUSTOMER_ISSUED",
             joinColumns = @JoinColumn(name = "CUSTOMER_ID"),
             inverseJoinColumns = @JoinColumn(name = "ISSUED_ID"))
@@ -43,12 +45,5 @@ public class Customer {
     public void setName(String name) {
         this.name = name;
     }
-/*
-    public Collection<IssuedBook> getIssuedBooks() {
-        return issuedBooks;
-    }
 
-    public void setIssuedBooks(Collection<IssuedBook> issuedBooks) {
-        this.issuedBooks = issuedBooks;
-    } */
 }
