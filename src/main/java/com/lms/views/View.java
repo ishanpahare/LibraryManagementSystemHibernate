@@ -226,6 +226,7 @@ public class View {
         CustomerDao customerDao = new CustomerDao();
         IssuedBookDao issuedBookDao = new IssuedBookDao();
         BookDao bookDao = new BookDao();
+        LibrarianDao librarianDao = new LibrarianDao();
 
         System.out.println("----------Issue Book----------");
         System.out.println("Enter Id of Customer: ");
@@ -240,6 +241,8 @@ public class View {
         //int availableUid = VerifyUtil.isAvailable(isbn, connect);
         Customer customer= customerDao.getCustomerById(cid,session);
         Book book = bookDao.getBookById(uid,session);
+        Librarian librarian=librarianDao.getLibrarianById(lid,session);
+
         if (customer == null) {
             System.out.println("Customer does not exist! Try with a different customer id");
             return;
@@ -251,11 +254,18 @@ public class View {
         }
 
         IssuedBook issuedBook = new IssuedBook();
+
         issuedBook.setName(book.getName());
         issuedBook.setIsbn(book.getIsbn());
         issuedBook.setPrice(book.getPrice());
         issuedBook.setAuthor(book.getAuthor());
         issuedBook.setPublisher(book.getPublisher());
+
+        issuedBook.getCustomers().add(customer);
+        customer.getIssuedBooks().add(issuedBook);
+
+        issuedBook.getLibrarians().add(librarian);
+        librarian.getIssuedBooks().add(issuedBook);
 
         issuedBookDao.insertIssuedBook(issuedBook,session);
         /*

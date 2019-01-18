@@ -11,14 +11,11 @@ public class Librarian {
     private int lid;
     private String username;
     private String password;
-    /*
     @ManyToMany
-    @JoinTable(
-            name = "ISSUED_BOOKS",
-            joinColumns = @JoinColumn(name="librarian_id"),
-            inverseJoinColumns = @JoinColumn(name = "issued_id")
-    )
-    private Collection<IssuedBook> issuedBooks=new ArrayList<>();
+    @JoinTable(name = "LIBRARIAN_ISSUED",
+    joinColumns = @JoinColumn(name = "LIBRARIAN_ID"),
+    inverseJoinColumns = @JoinColumn(name="ISSUED_ID"))
+    private Collection<IssuedBook> issuedBooks = new ArrayList<IssuedBook>();
 
     public Collection<IssuedBook> getIssuedBooks() {
         return issuedBooks;
@@ -26,7 +23,7 @@ public class Librarian {
 
     public void setIssuedBooks(Collection<IssuedBook> issuedBooks) {
         this.issuedBooks = issuedBooks;
-    } */
+    }
 
     public int getLid() {
         return lid;

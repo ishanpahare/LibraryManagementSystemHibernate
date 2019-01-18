@@ -3,6 +3,8 @@ package com.lms.dto;
 import com.lms.utils.DateUtil;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -12,22 +14,27 @@ public class IssuedBook extends Book{
     private Date issueDate = new Date();
     @Temporal(TemporalType.DATE)
     private Date returnDate = DateUtil.addDays(this.issueDate,14);
+    @ManyToMany(mappedBy = "issuedBooks")
+    private Collection<Customer> customers= new ArrayList<Customer>();
 
-    /*
-    @ManyToOne
-    @JoinColumn(name = "CID")
-    private Customer customer;
-    */
+    @ManyToMany(mappedBy = "issuedBooks")
+    private Collection<Librarian> librarians = new ArrayList<Librarian>();
 
-    /*
     public Collection<Librarian> getLibrarians() {
         return librarians;
-    }*/
+    }
 
-    /*
     public void setLibrarians(Collection<Librarian> librarians) {
         this.librarians = librarians;
-    }*/
+    }
+
+    public Collection<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Collection<Customer> customers) {
+        this.customers = customers;
+    }
 
     public Date getIssueDate() {
         return issueDate;
