@@ -25,8 +25,4 @@
 hs_err_pid*
 .idea
 *.iml
-target/generated-sources/
-target/generated-test-sources/
-src/
-target/classes/META-INF/
-target/classes/hibernate.cfg.xml
+target/

@@ -1,0 +1,44 @@
+<!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  -->
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.url">jdbc:postgresql://127.0.0.1:5432/lms</property>
+        <property name="connection.username">postgres</property>
+        <property name="connection.password">password</property>
+
+        <!-- JDBC connection pool (use the build-in) -->
+        <property name="connection.pool_size">10</property>
+
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.PostgreSQL91Dialect</property>
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+        <property name="hibernate.transaction.coordinator_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+
+        <!-- thread is the short name for org.hibernate.context.ThreadLocalSessionContext -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Set "true" to show SQL statements -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hbm2ddl.auto">create</property>
+
+        <!-- mapping class using annotation -->
+        <mapping class="com.lms.dto.Book"></mapping>
+        <mapping class="com.lms.dto.Librarian"></mapping>
+        <mapping class="com.lms.dto.Customer"></mapping>
+        <mapping class="com.lms.dto.IssuedBook"></mapping>
+    </session-factory>
+
+</hibernate-configuration>
