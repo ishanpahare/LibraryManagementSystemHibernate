@@ -11,6 +11,9 @@ import com.lms.dto.IssuedBook;
 import com.lms.dto.Librarian;
 import org.hibernate.Session;
 
+import javax.persistence.Query;
+import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 public class View {
@@ -78,6 +81,14 @@ public class View {
                 Customer customer=customerDao.getCustomerById(cid,session);
                 System.out.println("ID: "+customer.getCid());
                 System.out.println("Name: "+customer.getName());
+                System.out.println("-------LIST OF BOOKS ISSUED-------");
+                Collection<IssuedBook> issuedBooks = customer.getIssuedBooks();
+                for(IssuedBook issuedBook:issuedBooks){
+                    System.out.println("Name: "+issuedBook.getName());
+                    System.out.println("ISBN: "+issuedBook.getIsbn());
+                    System.out.println("Author: "+issuedBook.getAuthor());
+                    System.out.println();
+                }
                 System.out.println();
             }
             break;
@@ -180,7 +191,19 @@ public class View {
                 for(Customer customer:customerDao.getCustomerList(session)){
                     System.out.println("Name: "+customer.getName());
                     System.out.println("ID: "+customer.getCid());
+                    System.out.println("------ISSUED BOOKS-------");
+                    Collection<IssuedBook> issuedBooks = customer.getIssuedBooks();
+                    for (IssuedBook issuedBook:issuedBooks){
+                        System.out.println("Name: "+issuedBook.getName());
+                        System.out.println("ISBN: "+issuedBook.getIsbn());
+                        System.out.println("Author: "+issuedBook.getAuthor());
+                        System.out.println();
+                    }
+                    /*for(String string:result){
+                        System.out.println("Name: "+string);
+                    }*/
                 }
+
             }
             break;
             case 7: {
@@ -253,6 +276,11 @@ public class View {
             return;
         }
 
+        if (customer.getIssuedBooks().size()>=3) {
+            System.out.println("Already 3 books issued! Cannot issue more books!");
+            return;
+        }
+
         IssuedBook issuedBook = new IssuedBook();
 
         issuedBook.setName(book.getName());
@@ -268,11 +296,8 @@ public class View {
         librarian.getIssuedBooks().add(issuedBook);
 
         issuedBookDao.insertIssuedBook(issuedBook,session);
-        /*
-        if (issued >= 3) {
-            System.out.println("Already 3 books issued! Cannot issue more books!");
-        }
 
+        /*
         if (issued < 3 && availableUid != 0) {
             IssueBook.issueBook(availableUid, isbn, cid, lid, connect);
             System.out.println("Issued Successfully!");
