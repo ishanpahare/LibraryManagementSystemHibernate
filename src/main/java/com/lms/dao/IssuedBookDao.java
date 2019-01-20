@@ -23,7 +23,7 @@ public class IssuedBookDao {
         return issuedBookList;
     }
 
-    public Book getIssuedBookById(int uid, Session session) {
+    public IssuedBook getIssuedBookById(int uid, Session session) {
 
         IssuedBook issuedBook = null;
         try {

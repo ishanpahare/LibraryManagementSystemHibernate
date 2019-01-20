@@ -9,10 +9,12 @@ import com.lms.dto.Book;
 import com.lms.dto.Customer;
 import com.lms.dto.IssuedBook;
 import com.lms.dto.Librarian;
+import com.lms.utils.DateUtil;
 import org.hibernate.Session;
 
 import javax.persistence.Query;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,7 +22,7 @@ public class View {
 
     public static void librarianLoginView(Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);
-        LibrarianDao librarianDao=new LibrarianDao();
+        LibrarianDao librarianDao = new LibrarianDao();
         System.out.println("-------------LIBRARIAN LOGIN-------------");
 
         sc.nextLine();
@@ -31,9 +33,9 @@ public class View {
         String password = sc.nextLine();
 
         System.out.println("ID:");
-        int lid=sc.nextInt();
+        int lid = sc.nextInt();
 
-        Librarian lib = librarianDao.getLibrarianById(lid,session);
+        Librarian lib = librarianDao.getLibrarianById(lid, session);
 
         if (lib.getUsername().equals(username) && lib.getPassword().equals(password)) {
             //go to librarian main menu
@@ -53,15 +55,15 @@ public class View {
 
     public static void customerLoginView(Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);
-        CustomerDao customerDao= new CustomerDao();
+        CustomerDao customerDao = new CustomerDao();
         System.out.println("Enter Customer Id(0 to Exit): ");
         int id = sc.nextInt();
 
         if (id == 0) {
             System.exit(0);
         }
-        Customer customer=customerDao.getCustomerById(id,session);
-        if (customer!=null) {
+        Customer customer = customerDao.getCustomerById(id, session);
+        if (customer != null) {
             userView(session, customer.getCid(), mv);
             //System.out.println("Yes, we Exists!");
         } else {
@@ -78,15 +80,15 @@ public class View {
         int choice = sc.nextInt();
         switch (choice) {
             case 1: {
-                Customer customer=customerDao.getCustomerById(cid,session);
-                System.out.println("ID: "+customer.getCid());
-                System.out.println("Name: "+customer.getName());
+                Customer customer = customerDao.getCustomerById(cid, session);
+                System.out.println("ID: " + customer.getCid());
+                System.out.println("Name: " + customer.getName());
                 System.out.println("-------LIST OF BOOKS ISSUED-------");
                 Collection<IssuedBook> issuedBooks = customer.getIssuedBooks();
-                for(IssuedBook issuedBook:issuedBooks){
-                    System.out.println("Name: "+issuedBook.getName());
-                    System.out.println("ISBN: "+issuedBook.getIsbn());
-                    System.out.println("Author: "+issuedBook.getAuthor());
+                for (IssuedBook issuedBook : issuedBooks) {
+                    System.out.println("Name: " + issuedBook.getName());
+                    System.out.println("ISBN: " + issuedBook.getIsbn());
+                    System.out.println("Author: " + issuedBook.getAuthor());
                     System.out.println();
                 }
                 System.out.println();
@@ -96,13 +98,13 @@ public class View {
                 BookDao bookDao = new BookDao();
                 System.out.println("----------Library Stock------------");
                 System.out.println();
-                for(Book book:bookDao.getBookList(session)){
-                    System.out.println("UID: "+book.getUid());
-                    System.out.println("Name: "+book.getName());
-                    System.out.println("ISBN: "+book.getIsbn());
-                    System.out.println("Author: "+book.getAuthor());
-                    System.out.println("Publisher: "+book.getPublisher());
-                    System.out.println("Price: "+book.getPrice());
+                for (Book book : bookDao.getBookList(session)) {
+                    System.out.println("UID: " + book.getUid());
+                    System.out.println("Name: " + book.getName());
+                    System.out.println("ISBN: " + book.getIsbn());
+                    System.out.println("Author: " + book.getAuthor());
+                    System.out.println("Publisher: " + book.getPublisher());
+                    System.out.println("Price: " + book.getPrice());
                     System.out.println();
                 }
 
@@ -115,11 +117,11 @@ public class View {
             }
             break;
             case 4: {
-                //mv.getMainView(mv, connect);
+                mv.getMainView(mv, session);
             }
             break;
             default: {
-                //System.out.println("Enter a valid choice!");
+                System.out.println("Enter a valid choice!");
             }
             break;
         }
@@ -128,7 +130,7 @@ public class View {
 
     public static void librarianView(int lid, Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);
-        CustomerDao customerDao=new CustomerDao();
+        CustomerDao customerDao = new CustomerDao();
 
         System.out.println("----------------Welcome Librarian---------------");
         System.out.println();
@@ -139,13 +141,11 @@ public class View {
 
         switch (choice) {
             case 1: {
-                //IssueView issueView = new IssueView();
                 getIssueView(lid, session, mv);
             }
             break;
             case 2: {
-                //ReturnView returnView = new ReturnView();
-                //returnView(lid, db, mv);
+                returnView(lid, session, mv);
             }
             break;
 
@@ -158,18 +158,17 @@ public class View {
                 BookDao bookDao = new BookDao();
                 System.out.println("Enter uid of book: ");
                 int uid = sc.nextInt();
-                Book book = bookDao.getBookById(uid,session);
-                if(book==null){
+                Book book = bookDao.getBookById(uid, session);
+                if (book == null) {
                     System.out.println("Book Not in Library Stock");
-                }
-                else {
+                } else {
                     System.out.println("Book Details: ");
-                    System.out.println("UID: "+book.getUid());
-                    System.out.println("Name: "+book.getName());
-                    System.out.println("ISBN: "+book.getIsbn());
-                    System.out.println("Author: "+book.getAuthor());
-                    System.out.println("Publisher: "+book.getPublisher());
-                    System.out.println("Price: "+book.getPrice());
+                    System.out.println("UID: " + book.getUid());
+                    System.out.println("Name: " + book.getName());
+                    System.out.println("ISBN: " + book.getIsbn());
+                    System.out.println("Author: " + book.getAuthor());
+                    System.out.println("Publisher: " + book.getPublisher());
+                    System.out.println("Price: " + book.getPrice());
                     System.out.println();
                 }
             }
@@ -177,26 +176,26 @@ public class View {
 
             case 5: {
                 System.out.println("Enter Name of Customer: ");
-                String name=sc.next();
+                String name = sc.next();
                 Customer customer = new Customer();
                 customer.setName(name);
-               customerDao.insertCustomer(customer,session);
+                customerDao.insertCustomer(customer, session);
                 System.out.println("Customer added successfully!");
             }
             break;
 
             case 6: {
                 //List of Customers
-                System.out.println("--------Customer List--------");
-                for(Customer customer:customerDao.getCustomerList(session)){
-                    System.out.println("Name: "+customer.getName());
-                    System.out.println("ID: "+customer.getCid());
-                    System.out.println("------ISSUED BOOKS-------");
+                System.out.println("----------Customer List----------");
+                for (Customer customer : customerDao.getCustomerList(session)) {
+                    System.out.println("Name: " + customer.getName());
+                    System.out.println("ID: " + customer.getCid());
+                    System.out.println("Issued Books: ");
                     Collection<IssuedBook> issuedBooks = customer.getIssuedBooks();
-                    for (IssuedBook issuedBook:issuedBooks){
-                        System.out.println("Name: "+issuedBook.getName());
-                        System.out.println("ISBN: "+issuedBook.getIsbn());
-                        System.out.println("Author: "+issuedBook.getAuthor());
+                    for (IssuedBook issuedBook : issuedBooks) {
+                        System.out.println("Name: " + issuedBook.getName());
+                        System.out.println("ISBN: " + issuedBook.getIsbn());
+                        System.out.println("Author: " + issuedBook.getAuthor());
                         System.out.println();
                     }
                     /*for(String string:result){
@@ -211,13 +210,13 @@ public class View {
                 BookDao bookDao = new BookDao();
                 System.out.println("----------Library Stock------------");
                 System.out.println();
-                for(Book book:bookDao.getBookList(session)){
-                    System.out.println("UID: "+book.getUid());
-                    System.out.println("Name: "+book.getName());
-                    System.out.println("ISBN: "+book.getIsbn());
-                    System.out.println("Author: "+book.getAuthor());
-                    System.out.println("Publisher: "+book.getPublisher());
-                    System.out.println("Price: "+book.getPrice());
+                for (Book book : bookDao.getBookList(session)) {
+                    System.out.println("UID: " + book.getUid());
+                    System.out.println("Name: " + book.getName());
+                    System.out.println("ISBN: " + book.getIsbn());
+                    System.out.println("Author: " + book.getAuthor());
+                    System.out.println("Publisher: " + book.getPublisher());
+                    System.out.println("Price: " + book.getPrice());
                     System.out.println();
                 }
 
@@ -262,9 +261,9 @@ public class View {
         //int isCustomer = VerifyUtil.isCustomer(cid, connect);
         //int issued = VerifyUtil.getIssued(cid, connect);
         //int availableUid = VerifyUtil.isAvailable(isbn, connect);
-        Customer customer= customerDao.getCustomerById(cid,session);
-        Book book = bookDao.getBookById(uid,session);
-        Librarian librarian=librarianDao.getLibrarianById(lid,session);
+        Customer customer = customerDao.getCustomerById(cid, session);
+        Book book = bookDao.getBookById(uid, session);
+        Librarian librarian = librarianDao.getLibrarianById(lid, session);
 
         if (customer == null) {
             System.out.println("Customer does not exist! Try with a different customer id");
@@ -276,7 +275,7 @@ public class View {
             return;
         }
 
-        if (customer.getIssuedBooks().size()>=3) {
+        if (customer.getIssuedBooks().size() >= 3) {
             System.out.println("Already 3 books issued! Cannot issue more books!");
             return;
         }
@@ -295,7 +294,7 @@ public class View {
         issuedBook.getLibrarians().add(librarian);
         librarian.getIssuedBooks().add(issuedBook);
 
-        issuedBookDao.insertIssuedBook(issuedBook,session);
+        issuedBookDao.insertIssuedBook(issuedBook, session);
 
         /*
         if (issued < 3 && availableUid != 0) {
@@ -305,26 +304,52 @@ public class View {
         */
 
     }
-/*
-   public static void returnView(int lid, DBConnect connect, MainView mv) {
+
+    public static void returnView(int lid, Session session, MainView mv) {
+
         Scanner sc = new Scanner(System.in);
+        IssuedBookDao issuedBookDao = new IssuedBookDao();
+        IssuedBook issuedBook;
+        CustomerDao customerDao = new CustomerDao();
+        Customer customer;
+        LibrarianDao librarianDao = new LibrarianDao();
+        Librarian librarian;
+
         System.out.println("---------Return Book-----------");
-        System.out.println("Enter the ISBN of the book: ");
-        int isbn = sc.nextInt();
+        System.out.println("Enter the UID of the book: ");
+        int uid = sc.nextInt();
         System.out.println("Enter the Id of the customer: ");
-        int id = sc.nextInt();
-        int numberOfIssued = VerifyUtil.getIssued(id, connect);
-        int cid = VerifyUtil.isCustomer(id, connect);
-        if (numberOfIssued != 0) {
-            ReturnBook.returnBook(isbn, id, connect);
-        } else if (numberOfIssued == 0) {
-            System.out.println("Book Not Issued so cannot be returned!");
-        }
-        if (cid == 0) {
-            System.out.println("User does not exist!");
+        int cid = sc.nextInt();
+        issuedBook = issuedBookDao.getIssuedBookById(uid, session);
+        customer = customerDao.getCustomerById(cid, session);
+        librarian = librarianDao.getLibrarianById(lid, session);
+
+        if (issuedBook == null) {
+            System.out.println("Book with given uid not issued! Check and try again!");
+            return;
         }
 
-    } */
+        if (customer == null) {
+            System.out.println("Customer does not exist! Check and try again!");
+            return;
+        }
+        long difference = DateUtil.differenceInDays(issuedBook.getReturnDate(),new Date());
+        long fine = difference*3;
+        librarian.getIssuedBooks().remove(issuedBook);
+        issuedBook.getLibrarians().remove(librarian);
+
+        customer.getIssuedBooks().remove(issuedBook);
+        issuedBook.getCustomers().remove(customer);
+
+        issuedBookDao.deleteIssuedBook(issuedBook, session);
+
+        //calculating fine
+        if(fine <0) {
+            fine =0;
+        }
+            System.out.println("Fine to be paid: " + fine);
+
+    }
 
     public static void addBookView(int lid, Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);

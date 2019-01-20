@@ -6,6 +6,7 @@ import com.lms.dto.Book;
 import com.lms.dto.Customer;
 import com.lms.dto.IssuedBook;
 import com.lms.dto.Librarian;
+import com.lms.utils.HibernateUtil;
 import com.lms.utils.ReadJson;
 import com.lms.views.MainView;
 import org.hibernate.Session;
@@ -20,17 +21,17 @@ public class App {
 
         MainView mv = new MainView();
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        //Session session = HibernateUtil.getSession();
         Session session = sessionFactory.openSession();
-
         LibrarianDao librarianDao = new LibrarianDao();
-        CustomerDao customerDao = new CustomerDao();
+        //CustomerDao customerDao = new CustomerDao();
         Librarian librarian = new Librarian();
         // Customer customer = new Customer();
 
         /* Run Once to add Books to DB */
         ReadJson.getJson(session);
 
-        librarian.setUsername("lib2");
+        librarian.setUsername("lib1");
         librarian.setPassword("password");
 
         // customer.setName("cust1");
