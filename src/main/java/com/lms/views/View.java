@@ -1,14 +1,8 @@
 package com.lms.views;
 
 
-import com.lms.dao.BookDao;
-import com.lms.dao.CustomerDao;
-import com.lms.dao.IssuedBookDao;
-import com.lms.dao.LibrarianDao;
-import com.lms.dto.Book;
-import com.lms.dto.Customer;
-import com.lms.dto.IssuedBook;
-import com.lms.dto.Librarian;
+import com.lms.dao.*;
+import com.lms.dto.*;
 import com.lms.utils.DateUtil;
 import org.hibernate.Session;
 
@@ -198,9 +192,7 @@ public class View {
                         System.out.println("Author: " + issuedBook.getAuthor());
                         System.out.println();
                     }
-                    /*for(String string:result){
-                        System.out.println("Name: "+string);
-                    }*/
+                    System.out.println();
                 }
 
             }
@@ -224,8 +216,7 @@ public class View {
             break;
 
             case 8: {
-                //VendorView vendorView = new VendorView();
-                //getVendorView(lid, db, mv);
+                getVendorView(lid, session, mv);
             }
             break;
             case 9: {
@@ -237,7 +228,6 @@ public class View {
                 System.out.println("Enter A valid Option!");
 
             }
-            //libView(lid, db, mv);
             break;
         }
         librarianView(lid, session, mv);
@@ -256,11 +246,6 @@ public class View {
         System.out.println("Enter uid of book to be issued: ");
         int uid = sc.nextInt();
 
-        // checking the number of issued books is less than 3
-        // checking availability of book
-        //int isCustomer = VerifyUtil.isCustomer(cid, connect);
-        //int issued = VerifyUtil.getIssued(cid, connect);
-        //int availableUid = VerifyUtil.isAvailable(isbn, connect);
         Customer customer = customerDao.getCustomerById(cid, session);
         Book book = bookDao.getBookById(uid, session);
         Librarian librarian = librarianDao.getLibrarianById(lid, session);
@@ -295,14 +280,7 @@ public class View {
         librarian.getIssuedBooks().add(issuedBook);
 
         issuedBookDao.insertIssuedBook(issuedBook, session);
-
-        /*
-        if (issued < 3 && availableUid != 0) {
-            IssueBook.issueBook(availableUid, isbn, cid, lid, connect);
-            System.out.println("Issued Successfully!");
-        }
-        */
-
+        bookDao.deleteBook(book,session);
     }
 
     public static void returnView(int lid, Session session, MainView mv) {
@@ -314,7 +292,8 @@ public class View {
         Customer customer;
         LibrarianDao librarianDao = new LibrarianDao();
         Librarian librarian;
-
+        BookDao bookDao = new BookDao();
+        Book book = new Book();
         System.out.println("---------Return Book-----------");
         System.out.println("Enter the UID of the book: ");
         int uid = sc.nextInt();
@@ -333,21 +312,28 @@ public class View {
             System.out.println("Customer does not exist! Check and try again!");
             return;
         }
-        long difference = DateUtil.differenceInDays(issuedBook.getReturnDate(),new Date());
-        long fine = difference*3;
+        long difference = DateUtil.differenceInDays(issuedBook.getReturnDate(), new Date());
+        long fine = difference * 3;
         librarian.getIssuedBooks().remove(issuedBook);
         issuedBook.getLibrarians().remove(librarian);
 
         customer.getIssuedBooks().remove(issuedBook);
         issuedBook.getCustomers().remove(customer);
 
+        book.setName(issuedBook.getName());
+        book.setAuthor(issuedBook.getAuthor());
+        book.setPrice(issuedBook.getPrice());
+        book.setPublisher(issuedBook.getPublisher());
+        book.setIsbn(issuedBook.getIsbn());
+
         issuedBookDao.deleteIssuedBook(issuedBook, session);
+        bookDao.insertBook(book,session);
 
         //calculating fine
-        if(fine <0) {
-            fine =0;
+        if (fine < 0) {
+            fine = 0;
         }
-            System.out.println("Fine to be paid: " + fine);
+        System.out.println("Fine to be paid: " + fine);
 
     }
 
@@ -377,125 +363,97 @@ public class View {
         book.setPrice(price);
         bookDao.insertBook(book, session);
     }
-/*
-    public static void addCustomerView(int lid, DBConnect connect, MainView mv) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("-----------ADD NEW USER-----------");
-        System.out.println("Enter customer Name: ");
-        String name = sc.nextLine();
-        System.out.println("Enter customer id: ");
-        int id = sc.nextInt();
-        int cid = VerifyUtil.isCustomer(id, connect);
-        if (cid == 0) {
-            Customer customer = new Customer(name, id);
-            CustomerDaoImpl newCustomer = new CustomerDaoImpl();
-            newCustomer.save(customer, connect);
-            System.out.println("Customer added successfully!");
-        } else {
-            System.out.println("User already exists!");
+
+    /*
+        public static void addCustomerView(int lid, DBConnect connect, MainView mv) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("-----------ADD NEW USER-----------");
+            System.out.println("Enter customer Name: ");
+            String name = sc.nextLine();
+            System.out.println("Enter customer id: ");
+            int id = sc.nextInt();
+            int cid = VerifyUtil.isCustomer(id, connect);
+            if (cid == 0) {
+                Customer customer = new Customer(name, id);
+                CustomerDaoImpl newCustomer = new CustomerDaoImpl();
+                newCustomer.save(customer, connect);
+                System.out.println("Customer added successfully!");
+            } else {
+                System.out.println("User already exists!");
+            }
+
         }
-
-    }
-
-    public static void getVendorView(int lid, DBConnect db, MainView mv) {
+    */
+    public static void getVendorView(int lid, Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);
-        VendorDaoImpl vendorDao = new VendorDaoImpl();
+        VendorDao vendorDao = new VendorDao();
         System.out.println("--------List of Vendors--------");
         System.out.println("1.List of vendors and books\n2.Check Vendor Inventory\n3.Order Books from vendor\n4.Back");
         int choice = sc.nextInt();
         switch (choice) {
             case 1: {
-                System.out.println("LIST OF VENDORS AND BOOKS:");
-                try {
-                    ResultSet rs = vendorDao.getAll(db);
-                    while (rs.next()) {
-                        System.out.println("Vendor Id: " + rs.getInt("vid"));
-                        System.out.println("Vendor Name: " + rs.getString("name"));
-                        System.out.println("Book Name: " + rs.getString("bookname"));
-                        System.out.println("Book ISBN: " + rs.getInt("isbn"));
-                        System.out.println("Author: " + rs.getString("author"));
-                        System.out.println("Publisher: " + rs.getString("publisher"));
-                        System.out.println("Price: " + rs.getInt("price"));
-                        System.out.println();
-                    }
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
+                System.out.println("LIST OF VENDORS: ");
+                vendorDao.getVendorList(session);
             }
             break;
             case 2: {
                 System.out.println("Enter vendor Id to get a list of books: ");
                 int vid = sc.nextInt();
-                Vendor vendor = new Vendor(vid);
-                try {
-
-                    ResultSet rs = vendorDao.get(vendor, db);
-                    if (rs == null) {
-                        System.out.println("Vendor does not exist!");
-                        break;
-                    }
-                    while (rs.next()) {
-                        System.out.println("Name of Book: " + rs.getString("bookname"));
-                        System.out.println("ISBN: " + rs.getInt("isbn"));
-                        System.out.println("Author: " + rs.getString("author"));
-                        System.out.println("Publisher: " + rs.getString("publisher"));
-                        System.out.println("Price: " + rs.getInt("price"));
-                    }
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                Vendor vendor = vendorDao.getVendorById(vid, session);
+                if (vendor == null) {
+                    System.out.println("Vendor with the specified ID does not exist!");
+                    break;
+                }
+                for (VendorBook vendorBook : vendor.getVendorBooks()) {
+                    System.out.println("Name: " + vendorBook.getName());
+                    System.out.println("ISBN: " + vendorBook.getIsbn());
+                    System.out.println("Author: " + vendorBook.getAuthor());
+                    System.out.println("Publisher: " + vendorBook.getPublisher());
+                    System.out.println("Price: " + vendorBook.getPrice());
+                    System.out.println();
                 }
             }
             break;
             case 3: {
+                BookDao bookDao = new BookDao();
                 System.out.println("Enter id of Vendor: ");
                 int vid = sc.nextInt();
+                Vendor vendor = vendorDao.getVendorById(vid, session);
+                if (vendor == null) {
+                    System.out.println("Vendor does not exist!");
+                    break;
+                }
                 System.out.println("Enter the isbn of book you wish to purchase: ");
                 int isbn = sc.nextInt();
                 System.out.println("Enter the quantity you wish to purchase: ");
                 int quantity = sc.nextInt();
-                Vendor vendor = new Vendor(vid);
-                try {
-                    ResultSet rs = vendorDao.getBook(vendor, isbn, db);
-                    if (rs == null) {
-                        System.out.println("Vendor Does not exist!");
-                        break;
-                    }
-                    if (VerifyUtil.isBookWithVendor(vid, isbn, db)) {
-                        rs.next();
-                        int vendorIsbn = rs.getInt("isbn");
-                        String bookname = rs.getString("bookname");
-                        int price = rs.getInt("price");
-                        String author = rs.getString("author");
-                        String publisher = rs.getString("publisher");
+                for (VendorBook vendorBook : vendor.getVendorBooks()) {
+                    if (vendorBook.getIsbn() == isbn) {
+                        for (int i = 0; i < quantity; i++) {
+                            Book book = new Book();
+                            book.setName(vendorBook.getName());
+                            book.setAuthor(vendorBook.getAuthor());
+                            book.setIsbn(vendorBook.getIsbn());
+                            book.setPrice(vendorBook.getIsbn());
+                            book.setPublisher(vendorBook.getPublisher());
 
-                        Book book = new Book(vendorIsbn, bookname, price, author, publisher);
-                        BookDaoImpl addBook = new BookDaoImpl();
-                        for (int i = 1; i <= quantity; i++)
-                            addBook.save(book, db);
-                        System.out.println("Books added to library successfully!");
-
-                    } else {
-                        System.out.println("Book not available with vendor!");
-                        break;
+                            bookDao.insertBook(book, session);
+                        }
                     }
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
                 }
             }
-            break;
-            case 4: {
-                librarianView(lid, db, mv);
+                break;
+                case 4: {
+                    librarianView(lid, session, mv);
+                }
+                default: {
+                    System.out.println("Enter a Valid choice!");
+                }
+                break;
             }
-            default: {
-                System.out.println("Enter a Valid choice!");
-                getVendorView(lid, db, mv);
-            }
-            break;
-        }
-        getVendorView(lid, db, mv);
+            getVendorView(lid, session, mv);
 
-    }
-*/
+        }
 }
 
 
