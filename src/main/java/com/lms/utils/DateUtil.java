@@ -6,17 +6,16 @@ import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
 
-    public static Date addDays(Date date, int days)
-    {
+    public static Date addDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        cal.add(Calendar.DATE, days);
         return cal.getTime();
     }
 
-    public static long differenceInDays(Date startDate,Date endDate){
-        long duration = endDate.getTime()-startDate.getTime();
-        long diffInDays= TimeUnit.MILLISECONDS.toDays(duration);
+    public static long differenceInDays(Date startDate, Date endDate) {
+        long duration = endDate.getTime() - startDate.getTime();
+        long diffInDays = TimeUnit.MILLISECONDS.toDays(duration);
         return diffInDays;
     }
 }

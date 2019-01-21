@@ -10,15 +10,16 @@ import java.util.Collection;
 @Entity
 public class Librarian {
 
-   @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int lid;
     private String username;
     private String password;
     @ManyToMany
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "LIBRARIAN_ISSUED",
-    joinColumns = @JoinColumn(name = "LIBRARIAN_ID"),
-    inverseJoinColumns = @JoinColumn(name="ISSUED_ID"))
+            joinColumns = @JoinColumn(name = "LIBRARIAN_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ISSUED_ID"))
     private Collection<IssuedBook> issuedBooks = new ArrayList<IssuedBook>();
 
     public Collection<IssuedBook> getIssuedBooks() {

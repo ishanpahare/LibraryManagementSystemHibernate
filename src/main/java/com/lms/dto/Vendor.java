@@ -6,7 +6,8 @@ import java.util.Collection;
 
 @Entity
 public class Vendor {
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vid;
     private String name;
 

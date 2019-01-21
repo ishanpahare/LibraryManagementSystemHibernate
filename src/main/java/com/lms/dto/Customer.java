@@ -16,7 +16,6 @@ public class Customer {
     private String name;
 
     @ManyToMany
-    @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "CUSTOMER_ISSUED",
             joinColumns = @JoinColumn(name = "CUSTOMER_ID"),
             inverseJoinColumns = @JoinColumn(name = "ISSUED_ID"))

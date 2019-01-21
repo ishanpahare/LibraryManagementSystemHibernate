@@ -10,15 +10,15 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-public class IssuedBook extends Book{
+public class IssuedBook extends Book {
 
     @Temporal(TemporalType.DATE)
     private Date issueDate = new Date();
     @Temporal(TemporalType.DATE)
-    private Date returnDate = DateUtil.addDays(this.issueDate,14);
+    private Date returnDate = DateUtil.addDays(this.issueDate, 14);
     @ManyToMany(mappedBy = "issuedBooks")
     @NotFound(action = NotFoundAction.IGNORE)
-    private Collection<Customer> customers= new ArrayList<Customer>();
+    private Collection<Customer> customers = new ArrayList<Customer>();
 
     @ManyToMany(mappedBy = "issuedBooks")
     @NotFound(action = NotFoundAction.IGNORE)
@@ -53,15 +53,7 @@ public class IssuedBook extends Book{
     }
 
     public void setReturnDate(Date returnDate) {
-       this.returnDate = returnDate;
+        this.returnDate = returnDate;
     }
 
-    /*
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }*/
 }

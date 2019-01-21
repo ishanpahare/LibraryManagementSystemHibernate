@@ -5,10 +5,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class VendorBook extends Book{
+public class VendorBook extends Book {
 
     @ManyToOne
-    @JoinColumn(name="VID")
+    @JoinColumn(name = "VID")
     private Vendor vendor;
 
     public Vendor getVendor() {

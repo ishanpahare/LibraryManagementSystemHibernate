@@ -3,7 +3,6 @@ package com.lms.utils;
 
 import com.lms.dao.BookDao;
 import com.lms.dto.Book;
-import com.lms.dto.Vendor;
 import org.hibernate.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,7 +19,7 @@ public class ReadJson {
         try (FileReader reader = new FileReader("books.json")) {
             Object obj = parser.parse(reader);
             JSONArray booklist = (JSONArray) obj;
-            booklist.forEach(book -> parseBookObject((JSONObject) book,session));
+            booklist.forEach(book -> parseBookObject((JSONObject) book, session));
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (IOException e1) {
@@ -32,7 +31,7 @@ public class ReadJson {
         }
     }
 
-    private static void parseBookObject(JSONObject book,Session session) {
+    private static void parseBookObject(JSONObject book, Session session) {
 
         JSONObject bookObject = (JSONObject) book.get("book");
         BookDao bookDao = new BookDao();
@@ -49,6 +48,6 @@ public class ReadJson {
         newBook.setIsbn(isbn);
         newBook.setAuthor(author);
 
-        bookDao.insertBook(newBook,session);
+        bookDao.insertBook(newBook, session);
     }
 }

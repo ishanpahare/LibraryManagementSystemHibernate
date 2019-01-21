@@ -6,10 +6,8 @@ import com.lms.dto.*;
 import com.lms.utils.DateUtil;
 import org.hibernate.Session;
 
-import javax.persistence.Query;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 public class View {
@@ -34,7 +32,6 @@ public class View {
         if (lib.getUsername().equals(username) && lib.getPassword().equals(password)) {
             //go to librarian main menu
             librarianView(lid, session, mv);
-            //System.out.println("Correct Credentials!");
         } else {
             System.out.println("INVALID CREDENTIALS!");
             System.out.println("1.Try Again\n2.Exit");
@@ -106,8 +103,6 @@ public class View {
             break;
             case 3: {
                 System.out.println("----------Fine---------");
-                //int totalFine = ReturnBook.calculateFine(cid, connect);
-                //System.out.println("Total Fine: " + totalFine);
             }
             break;
             case 4: {
@@ -280,7 +275,7 @@ public class View {
         librarian.getIssuedBooks().add(issuedBook);
 
         issuedBookDao.insertIssuedBook(issuedBook, session);
-        bookDao.deleteBook(book,session);
+        bookDao.deleteBook(book, session);
     }
 
     public static void returnView(int lid, Session session, MainView mv) {
@@ -327,7 +322,7 @@ public class View {
         book.setIsbn(issuedBook.getIsbn());
 
         issuedBookDao.deleteIssuedBook(issuedBook, session);
-        bookDao.insertBook(book,session);
+        bookDao.insertBook(book, session);
 
         //calculating fine
         if (fine < 0) {
@@ -364,26 +359,6 @@ public class View {
         bookDao.insertBook(book, session);
     }
 
-    /*
-        public static void addCustomerView(int lid, DBConnect connect, MainView mv) {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("-----------ADD NEW USER-----------");
-            System.out.println("Enter customer Name: ");
-            String name = sc.nextLine();
-            System.out.println("Enter customer id: ");
-            int id = sc.nextInt();
-            int cid = VerifyUtil.isCustomer(id, connect);
-            if (cid == 0) {
-                Customer customer = new Customer(name, id);
-                CustomerDaoImpl newCustomer = new CustomerDaoImpl();
-                newCustomer.save(customer, connect);
-                System.out.println("Customer added successfully!");
-            } else {
-                System.out.println("User already exists!");
-            }
-
-        }
-    */
     public static void getVendorView(int lid, Session session, MainView mv) {
         Scanner sc = new Scanner(System.in);
         VendorDao vendorDao = new VendorDao();
@@ -442,18 +417,18 @@ public class View {
                     }
                 }
             }
-                break;
-                case 4: {
-                    librarianView(lid, session, mv);
-                }
-                default: {
-                    System.out.println("Enter a Valid choice!");
-                }
-                break;
+            break;
+            case 4: {
+                librarianView(lid, session, mv);
             }
-            getVendorView(lid, session, mv);
-
+            default: {
+                System.out.println("Enter a Valid choice!");
+            }
+            break;
         }
+        getVendorView(lid, session, mv);
+
+    }
 }
 
 

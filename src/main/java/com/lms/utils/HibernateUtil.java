@@ -11,33 +11,32 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory = null;
 
     static {
-        try{
+        try {
             loadSessionFactory();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Exception while initializing hibernate util.. ");
             e.printStackTrace();
         }
     }
 
-    public static void loadSessionFactory(){
+    public static void loadSessionFactory() {
 
         Configuration configuration = new Configuration();
         configuration.configure();
-        //configuration.addAnnotatedClass();
         ServiceRegistry srvcReg = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         sessionFactory = configuration.buildSessionFactory(srvcReg);
     }
 
     public static Session getSession() throws HibernateException {
 
-        Session retSession=null;
+        Session retSession = null;
         try {
-            retSession=sessionFactory.openSession();
-        }catch(Throwable t){
+            retSession = sessionFactory.openSession();
+        } catch (Throwable t) {
             System.err.println("Exception while getting session.. ");
             t.printStackTrace();
         }
-        if(retSession == null) {
+        if (retSession == null) {
             System.err.println("session is discovered null");
         }
 
